@@ -1,0 +1,176 @@
+\section{Review}
+\label{sec:review}
+
+Due to recent advances in web technologies (\eg{}, WebGL and HTML5), web-based visualizations have become increasingly prevalent~\autocite{Evans.2014.CGJourn.Survey}.
+%
+Applications include: data visualization, education (\eg{}, viewing the human anatomy or the structure of a molecule), content creation (\ie{}, creating 3D models and other assets), gaming, and structure visualization (\eg{}, geospatial and architectural)~\autocite{Moore.2014.ALIFE.Web,Evans.2014.CGJourn.Survey,Mwalongo.2016.CompGraphForum.Web}.
+%
+The convenience of web-browsers and their increased performance has led to this increase in web-based applications.
+
+
+\subsection{Usage}
+
+Before we discuss Review in detail, we provide the following proposed usage for using Review as part of an ER study:
+
+\begin{enumerate}
+  \item Run evolutionary experiments
+  \item Generate animation data (in Review log file format) for \emph{interesting} results
+  \item Load animations in Review
+  \item Configure the scene (change materials and environment)
+  \item Export animation file (Review log file and/or glTF formats)
+  \item (optional) Generate high-quality videos using glTF
+  \item Share animations with other researchers
+\end{enumerate}
+
+The final step above can be achieved in several ways. First, Review log files can sent to collaborators or hosted on a professional website. In either case, the log files can automatically be fetched by Review in the following manner: https://review.github.io/?log=https://raw.githubusercontent. com/review/review.github.io/master/static/ examples/simple1.json.
+%
+Here, we have provided the URI of a log file to Review via an HTTP URI query component (note the "?").
+%
+It can often be desirable to shorten the URI with a URL shortener. For example, this link can be used in place of the previous: \url{https://goo.gl/opnkfp} (this usage is also shown in the caption of Figure~\ref{fig:passive_flex_gaits}).
+%
+Second, a QR Code can be generated and paired with the image sequence as shown in Figure~\ref{fig:sphere_qr}.
+%
+This can be useful if someone is reading a printed copy of the study in question, but they are able to visit the Review link on their smart-phone.
+%
+Finally, Review-based animations can be embedded into a blog-post using an HTML \textbf{iframe}.
+%
+This allows users to see animations in a similar manner to an embedded video, but they will be able to manipulate the viewing angle, and change the color of objects in the scene.
+
+
+\begin{figure}[htb!]
+    \centering
+
+    \subfloat[Animation]{\includegraphics[width=0.25\columnwidth]{figures/sphere_ss.png}}%
+    \hfil%
+    \subfloat[QR Code]{\includegraphics[width=0.25\columnwidth]{figures/sphere_qr.png}}
+
+    \caption{(a) An image of the animation and (b) a QR Code directing a reader to the animation on Review.}
+    \label{fig:sphere_qr}
+
+\end{figure}
+
+
+
+\subsection{Interface}
+
+
+A screen-shot of the Review interface is shown in Figure~\ref{fig:review_screenshot}.
+%
+Review provides two methods for loading a log file (the log files is described in the next section):
+(1) log files can be loaded from the local machine either by dragging the file onto the browser window, or by choosing a file from the open-file dialog box that is available when no log file is currently loaded (not shown), or
+(2) log files can be specified via an HTTP URI query component and loaded automatically by Review from remote servers (as demonstrated above).
+
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width=0.9\columnwidth]{figures/review-screenshot.png}
+\caption{A screen-shot of Review with a UGV simulation in progress. The color palette can be used to change the color of each object in the scene.}
+\label{fig:review_screenshot}
+\end{figure}
+
+
+This image shows depicts a scene of a transformable wheel UGV with several obstacles, and the UGV's chassis color is currently being changed with a color picker that resides in the settings pane.
+%
+The settings pane can be hidden from view when it is unneeded.
+%
+A standard set of playback controls are available at the bottom of the screen.
+%
+One of the most useful controls is the progress bar, which can be \emph{scrubbed} forward and backwards. Scrubbing refers to the ability to drag the progress icon to quickly navigate through time while watching the scene update on-the-fly.
+%
+The playback speed can be adjusted from~\numrange{-5}{5}, where a negative number indicates that the scene will play in reverse.
+%
+Review also includes several other expected features, for example, the ability to following a specific object with the camera and to reset the camera to its original settings.
+
+
+
+
+\subsection{Log File Format}
+
+One motivating factor for developing Review was the lack of an alternative with a suitable file format.
+%
+Most similar tools (described in section~\ref{sec:related_work}) require a complex file format that is difficult to generate alongside a physical simulation--likely because most tools anticipate that visualization data is being generated by an authoring tool like Blender\footnote{\url{https://www.blender.org/}} or Autodesk Maya\footnote{\url{https://www.autodesk.com/products/maya/overview}}.
+%
+The Review file format was specifically designed to be easily generated while running a simulation. An example of the Review log file format follows:
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[style=json]
+{
+  "name": "Sphere Example",
+  "timeStep": 0.25,
+  "objects": [{
+    "name": "sphere1",
+    "mesh": "sphere"
+  }],
+  "frames": [
+    { "sphere1": { "t": [0, 0, 0] } },
+    { "sphere1": { "t": [1, 0, 0] } },
+    { "sphere1": { "t": [1, 0, 1] } },
+    { "sphere1": { "t": [0, 0, 1] } },
+    {  },
+    { "sphere1": { "t": [0, 0, 0] } }
+  ]
+}
+\end{lstlisting}
+\end{minipage}
+
+Click the following link to interact with this animation: \url{https://goo.gl/9ZUYYe}.
+%
+This is a visualization of a sphere that moves in a square pattern and pauses for one frame when it reaches its position at the fourth frame.
+
+
+The log file is a JSON file with a specific schema~\autocite{JSON.2018.Schema}. Here we describe a basic file, but the full schema can be found in the Review Git repository.
+%
+This file format is human readable and writable, and nearly all programming languages include a library for manipulating JSON data.
+%
+The Review logging library\footnote{\url{https://github.com/review/logger-cpp}} used to generated the  files linked in this study has been provided, and it contains less than 100 lines of C++ code and has only one external dependency (a C++ JSON library).
+%
+This format has four required fields. The \textbf{name} (string) and \textbf{timeStep} (number) provide a unique name for the visualization and the time elapsed between frames, respectively.
+
+
+\textbf{objects} (array) is a list of all objects that are present in the scene. In the example, there is only one object and only the required object fields are specified.
+%
+Each object must have a unique \textbf{name} (string) and a \textbf{mesh} (string).
+%
+The \textbf{mesh} value denotes either a primitive (\emph{cube}, \emph{cylinder}, or \emph{sphere}) or a URI to an external resource (\eg{}, an STL or COLLADA file).
+%
+In addition to these fields, several other attributes can be specified. The most prominent fields include: a physically based rendering (PBR) material, translation, rotation, and scale.
+
+
+\textbf{frames} (array) is a list of all frames in the scene, and the time lapsed between each pair of consecutive frames is always \textbf{timeStep}.
+%
+Each frame is a JSON object where the keys (left side of the colon) denote objects named in the \textbf{objects} array, and the values (right side of the colon) denote object transformations.
+%
+In the example, the only attribute of \emph{sphere1} that changes is its translation. The most common animation attributes are translation (\textbf{t}) and rotation (\textbf{r}), but other types can be specified (\eg{}, color).
+%
+As exemplified by the fifth frame, this log file format enables some frames to not include any transformations. This greatly reduces the file size when many objects are in the scene but only a few are in motion at any given time.
+%
+For example, for the UGV visualization in Figure~\ref{fig:review_screenshot} all 30 boxes are dynamic, but only one or two boxes are pushed by the UGV in any given frame.
+%
+Although frame data may be omitted, currently the frames themselves must be present (even if empty) to ensure that the duration of the simulation is accurate--the log file format does not currently allow for variable \textbf{timeSteps} between different frames.
+
+
+
+\subsection{Details}
+
+After Review loads a JSON-format log file, it converts it into glTF~2.0\footnote{\url{https://github.com/KhronosGroup/glTF}}.
+%
+glTF is a transmission format specified in JSON that is used for loading and saving 3D models and scenes.
+%
+The Review log format is converted into glTF because glTF is supported by nearly all rendering software and authoring tools.
+%
+In our early implementations of Review, we were using the Review log files directly, however, by converting to glTF we can rely on well-tested and optimized animation frameworks for visualizing robot behaviors.
+%
+Thus, Review maintains the benefit of a simple file format while also gaining the capabilities of more capable rendering libraries.
+
+
+Specifically, Review uses three.js~\autocite{Cabello.2013.ThreeJS} to render animated scenes to the screen.
+%
+three.js includes a modern rendering pipeline, great support for animations, and can import glTF files.
+%
+Perhaps the most important feature of the three.js animation system is \emph{interpolation}, whereby three.js will interpolate transformation between frames.
+%
+In the moving sphere example above, the time between frames is 0.25s, however, most computers will have no trouble rendering the scene at 60 frames-per-second, which means that three.js will use interpolation to generate roughly 15 frames in-between each frame.
+%
+The impact of interpolation is most dramatic when the playback speed is reduced. For instance, when the playback speed is set to 0.25 three.js generates 60 interpolated frames, thereby providing a smooth animation.
+%
+Without interpolation, animations would be choppy (similar to a slowed-down video).

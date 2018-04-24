@@ -17,7 +17,7 @@ In this paper, we present \textbf{Review}\footnote{https://review.github.io/} (s
 
 
 % (2) Background paragraph: Elaborate on why the problem is hard, critically examining prior work, trying to tease out one or two central shortcomings that your solution overcomes.
-Traditionally, to depict behaviors of an evolved system, researchers provide sequences of images (see Figures~\ref{fig:passive_flex_gaits} and~\ref{fig:worm_gaits}) and/or links to videos.
+Traditionally, to depict behaviors of an evolved system, researchers provide sequences of images (see Figures~\ref{fig:quad_gaits} and~\ref{fig:worm_gaits}) and/or links to videos.
 %
 Image sequences have been a common feature of ER from the beginning; see, \textcite{Sims.1994.CGIT.Creatures} from \citeyear{Sims.1994.CGIT.Creatures} for example.
 %
@@ -25,7 +25,7 @@ Images, however, can sometimes be problematic. First, when a reader is unfamilia
 %
 And second, even with a good understanding of what to expect, some complex movements are difficult to comprehend from image sequences.
 %
-For example, the quadruped gaits in Figure~\ref{fig:passive_flex_gaits} are reasonably understandable for someone familiar with such systems, but for someone new to quadrupedal robotics it may be difficult to picture the motions.
+For example, the quadruped gaits in Figure~\ref{fig:quad_gaits} are reasonably understandable for someone familiar with such systems, but for someone new to quadrupedal robotics it may be difficult to picture the motions.
 %
 Likewise, the unusual gaits exhibited by the worm-like animat in Figure~\ref{fig:worm_gaits} are difficult to imagine without the aid of video (or animation).
 
@@ -33,15 +33,15 @@ Likewise, the unusual gaits exhibited by the worm-like animat in Figure~\ref{fig
 
 \begin{figure*}[htb!]
 \centering
-\includegraphics[width=\textwidth]{figures/GECCO_Passive_Gaits_4_x_2_6_5.png}
-\caption{Evolved gaits for a quadruped animat: (top) galloping, (bottom) hopping. An interactive visualization of the hopping gait can be found here: \url{https://goo.gl/cY8kCs}}.
-\label{fig:passive_flex_gaits}
+\includegraphics[width=\textwidth]{figures/quadruped.png}
+\caption{Evolved gaits for a quadrupedal animat: (top) galloping, (bottom) hopping. An interactive visualization of the galloping and hopping gaits can be found, respectively, at the following links: \url{http://bit.ly/2HYXS7u} and \url{http://bit.ly/2HVY9bc}; or by visiting the links specified by the QR codes.}
+\label{fig:quad_gaits}
 \end{figure*}
 
 \begin{figure*}[htb!]
 \centering
-\includegraphics[width=\textwidth]{figures/Worm_Composite_5_x_1.png}
-\caption{Evolved gaits for a worm-like animat (from \textcite{Moore.2017.GECCO.Animat}): (top) rolling, (bottom) hopping gate.}
+\includegraphics[width=\textwidth]{figures/worm.png}
+\caption{Evolved gaits for a worm-like animat (adapted with permission from \textcite{Moore.2017.GECCO.Animat}): (top) tumbling, (bottom) hopping. An interactive visualization of the tumbling and hopping gaits can be found, respectively, at the following links: \url{http://bit.ly/2vH4Knp} and \url{http://bit.ly/2HnHa4C}; or by visiting the links specified by the QR codes.}
 \label{fig:worm_gaits}
 \end{figure*}
 
@@ -52,7 +52,11 @@ Videos, however, are similarly static in the sense that the camera transform (vi
 %
 Practically, this means that a viewer of the video cannot change the view angle or zoom-in on different aspects of the scene, and cannot change the color of objects if they find the chosen colors hard to see.
 %
-And although some web-based video players allow a viewer to speed-up/slow-down the video by small amounts, this is usually at the cost of playback smoothness; videos appear \emph{choppy} when they are slowed down.
+And although some web-based video players allow a viewer to speed-up/slow-down the video by small amounts, this is usually at the cost of playback smoothness; videos appear \emph{choppy} when they are slowed down since videos are recorded at a fixed frame-rate and slowing down the video effectively makes each frame appear for a longer period of time.
+%
+Additionally, it is common for ER researchers to generate videos by performing a video screen recording (often referred to as a screencast).
+%
+Since the speed of a simulation playback depends on the current load of both the CPU and GPU, recording a simulation playback via screencasting generally leads to videos with irregular frame-rates.
 %
 Animation software, such as Review, does not have these drawbacks.
 
